@@ -1,4 +1,2 @@
 google.com
 google.com
-api.agungsurya.my.id
-agungsurya.my.id
