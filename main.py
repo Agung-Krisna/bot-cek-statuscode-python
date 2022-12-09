@@ -20,6 +20,14 @@ sleep_time2 = 30
 creds = open('creds.json')
 credentials = json.load(creds)
 
+
+def telegram_bot_sendtext_untuk_agungsurya(bot_message):
+    bot_token = 
+    bot_chatID = 
+    send_text_v2 = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message + '&disable_notification=true'
+    result_v2 = requests.get(send_text_v2)
+    print(result_v2)
+
 def telegram_bot_sendtext(bot_message):
     bot_token = credentials["bot-token"]
     bot_chatID = credentials["bot-chat-id"]
@@ -81,7 +89,7 @@ def iterateDomains(domains, sleep_time=5, timeout=3):
             print(message_status_code)
         else:
             message_status_code_down = f"domain {copy_domain} is down, status code = {status_code}"
-            telegram_bot_sendtext_v1(message_status_code_down) # this also doesn't work
+            telegram_bot_sendtext_v1(message_status_code_down) # this also doesn't work?
             print(message_status_code_down)
         domain_dict[domain] = status_code
     
@@ -91,12 +99,12 @@ def iterateDomains(domains, sleep_time=5, timeout=3):
     json_file.close()
 
 
-telegram_bot_sendtext("script mulai berjalan")
+telegram_bot_sendtext("script mulai berjalan") # atau telegram_bot_sendtext_untuk_agungsurya("script mulai berjalan")
 start = time.time()
 iterateDomains(domains)
 end = time.time()
 
 time_required = round(end - start)
 
-telegram_bot_sendtext(f"script telah selesai berjalan, waktu berjalan:  {time_required} sekon")
+telegram_bot_sendtext(f"script telah selesai berjalan, waktu berjalan:  {time_required} sekon") #atau telegram_bot_sendtext_untuk_agungsurya(f"script telah selesai berjalan, waktu berjalan:  {time_required} sekon")
 print(f"program telah selesai dengan waktu {time_required} sekon")
