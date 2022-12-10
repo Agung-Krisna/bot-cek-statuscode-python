@@ -20,7 +20,9 @@ sleep_time2 = 30
 creds = open('creds.json')
 credentials = json.load(creds)
 
-def screenshot_page():
+def screenshot_page(copy_domain):
+    #192.168.1.1 example ip
+    requests.get(f"http://192.168.1.1:8080/screenshot/{copy_domain}")
     pass
 
 def telegram_bot_sendtext(bot_message, v1=True):
@@ -46,6 +48,7 @@ def check_status(url, param_timeout=5):
     try:
         status_code = requests.get(url, timeout=param_timeout, headers=useragent).status_code
         if (status_code != 200):
+            #screenshot_page(copy_domain)
             telegram_bot_sendtext(f"bot mendapatkan status code {status_code} ketika mengecek domain {copy_domain}. Pengecekan ulang akan dilakukan dalam {sleep_time2} detik")
             sleep(randint(1,sleep_time2))
             status_code = requests.get(url, timeout=param_timeout, headers=useragent).status_code
