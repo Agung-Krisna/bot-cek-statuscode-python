@@ -10,41 +10,28 @@ import time
 from urllib.parse import quote
 
 def agent():
-    agents = random.choice(open("/home/gungsurya/useragent.txt", 'r').readlines()).replace("\n", "")
+    agents = random.choice(open("useragent.txt", 'r').readlines()).replace("\n", "")
     return agents
 
 
 useragent = {"User-Agent": agent()}  #{'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36'}
 sleep_time2 = 30
 
-#creds = open('creds.json')
-#credentials = json.load(creds)
+creds = open('creds.json')
+credentials = json.load(creds)
 
-def agungsurya_api(bot_message):
+def screenshot_page():
+    pass
 
-    send_text2 = 'http://api' + bot_message
-    requests.get(send_text2)
-
-def telegram_bot_sendtext_untuk_agungsurya(bot_message3):
-    bot_token = ''
-    bot_chatID = ''
-    send_text_v2 = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message3 + '&disable_notification=true'
-    result_v2 = requests.get(send_text_v2)
-    print(result_v2)
-
-def telegram_bot_sendtext(bot_message):
-    bot_token = '' #credentials["bot-token"]
-    bot_chatID = '' #credentials["bot-chat-id"]
-    send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=MarkdownV2&text=' + bot_message + '&disable_notification=true'
+def telegram_bot_sendtext(bot_message, v1=True):
+    bot_token = credentials["bot-token"]
+    bot_chatID = credentials["bot-chat-id"]
+    if (v1):
+        send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message + '&disable_notification=true'
+    else:
+        send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=MarkdownV2&text=' + bot_message + '&disable_notification=true'
     result = requests.get(send_text)
     print(result)
-
-def telegram_bot_sendtext_v1(bot_message2):
-    bot_token = '' #credentials["bot-token"]
-    bot_chatID =  '' #credentials["bot-chat-id"]
-    send_text_v1 = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message2 + '&disable_notification=true'
-    result_v1 = requests.get(send_text_v1)
-    print(result_v1)
 
 if (os.path.exists("monitor.json")):
     previous_monitor = open("monitor.json")
@@ -59,14 +46,14 @@ def check_status(url, param_timeout=5):
     try:
         status_code = requests.get(url, timeout=param_timeout, headers=useragent).status_code
         if (status_code != 200):
-            telegram_bot_sendtext_v1(f"bot mendapatkan status code {status_code} ketika mengecek domain {copy_domain}. Pengecekan ulang akan dilakukan dalam {sleep_time2} detik")
+            telegram_bot_sendtext(f"bot mendapatkan status code {status_code} ketika mengecek domain {copy_domain}. Pengecekan ulang akan dilakukan dalam {sleep_time2} detik")
             sleep(randint(1,sleep_time2))
             status_code = requests.get(url, timeout=param_timeout, headers=useragent).status_code
             if (status_code == 200):
-                telegram_bot_sendtext_v1(f"pengecekan berhasil status code adalah {status_code}")
+                telegram_bot_sendtext(f"pengecekan berhasil status code adalah {status_code}")
     except Exception as e:
         status_code = 0
-        telegram_bot_sendtext(f"bot mengalami error ketika mengecek status code\nDetail Error:```\n{e}\n``` ")
+        telegram_bot_sendtext(f"bot mengalami error ketika mengecek status code\nDetail Error:```\n{e}\n``` ", v1=False)
         print(e)
     return status_code
 
@@ -78,9 +65,9 @@ def sanitize_input(domain):
     return domain
 
 
-domains = open("/home/gungsurya/domain.txt", 'r').readlines()
+domains = open("domain.txt", 'r').readlines()
 
-def iterateDomains(domains, sleep_time=3, timeout=180):
+def iterateDomains(domains, sleep_time=3, timeout=10):
     for domain in domains:
         copy_domain = domain
         domain = sanitize_input(domain)
@@ -89,14 +76,14 @@ def iterateDomains(domains, sleep_time=3, timeout=180):
         if (domain in domain_dict):
             if (domain_dict[domain] != status_code):
                 status_changed = f"domain {copy_domain} status changed from previous {domain_dict[domain]} into {status_code}"
-                telegram_bot_sendtext_v1(status_changed) # doesn't work ?
+                telegram_bot_sendtext(status_changed) # doesn't work ?
                 print(status_changed)
         if (status_code == 200):
             message_status_code = (f"domain {copy_domain} is up")
             print(message_status_code)
         else:
             message_status_code_down = f"domain {copy_domain} is down, status code = {status_code}"
-            telegram_bot_sendtext_v1(message_status_code_down) # this also doesn't work
+            telegram_bot_sendtext(message_status_code_down) # this also doesn't work
             print(message_status_code_down)
         domain_dict[domain] = status_code
     
@@ -106,12 +93,12 @@ def iterateDomains(domains, sleep_time=3, timeout=180):
     json_file.close()
 
 
-agungsurya_api("script mulai berjalan")  #telegram_bot_sendtext_untuk_agungsurya("script mulai berjalan") #telegram_bot_sendtext("script mulai berjalan")
+print("script mulai berjalan")  #telegram_bot_sendtext_untuk_agungsurya("script mulai berjalan") #telegram_bot_sendtext("script mulai berjalan")
 start = time.time()
 iterateDomains(domains)
 end = time.time()
 
 time_required = round(end - start)
 
-agungsurya_api(f"script telah selesai berjalan, waktu berjalan:  {time_required} sekon")   #telegram_bot_sendtext_untuk_agungsurya(f"script telah selesai berjalan, waktu berjalan:  {time_required} sekon") #telegram_bot_sendtext(f"script telah selesai berjalan, waktu berjalan:  {time_required} sekon")
-print(f"program telah selesai dengan waktu {time_required} sekon")
+print(f"script telah selesai berjalan, waktu berjalan:  {time_required} sekon")   #telegram_bot_sendtext_untuk_agungsurya(f"script telah selesai berjalan, waktu berjalan:  {time_required} sekon") #telegram_bot_sendtext(f"script telah selesai berjalan, waktu berjalan:  {time_required} sekon")
+# print(f"program telah selesai dengan waktu {time_required} sekon")
