@@ -16,7 +16,8 @@ async def screenshot(domain : str, response_class=FileResponse):
     os.system(f'wkhtmltoimage {domain} {filename}')
     
     response = RedirectResponse(url=f"/getfile/{filename}")
-    return response
+    #return response
+    return {"filename": filename}
 
 @app.get('/getfile/{filename}')
 async def getfile(filename: str, response_class=FileResponse):
