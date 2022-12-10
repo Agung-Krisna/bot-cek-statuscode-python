@@ -4,7 +4,10 @@ from fastapi.responses import FileResponse, RedirectResponse
 import os
 import datetime
 import os.path
+from pathlib import Path
 app = FastAPI()
+
+
 
 filename = ""
 @app.get('/screenshot/{domain}')
@@ -22,22 +25,14 @@ async def screenshot(domain : str, response_class=FileResponse):
 
 @app.get('/getfile/{filename}')
 async def getfile(filename: str, response_class=FileResponse):
-    return FileResponse(f'{filename}')
-   #  try:
-           # file_exists = os.path.exists(filename)
-           # print(file_exists)
-           # if true:
-            
-            #return FileResponse(f'{filename}')
-            #file_exists = exists(path_to_file)
-                #while contents := file.file.read(1024 * 1024):
-                 #   f.write(contents)
-                #    else:
-                     #   return {"message": "There was an error get file"}
-                    
-        #except Exception:
-            #return {"message": "There was an error get file"}
-        #finally:
-         ##   file.file.close()
+    path_to_file = filename
+    path = Path(path_to_file)
+    
+    if path.is_file():
+        print(f'The file {path_to_file} exists')
+        return FileResponse(f'{filename}')
+        
+    else:
+        print(f'The file {path_to_file} does not exist')
+        
 
-      #  return {"message": f"Successfully uploaded {file.filename}"}
