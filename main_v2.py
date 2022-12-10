@@ -20,7 +20,8 @@ sleep_time2 = 30
 creds = open('creds.json')
 credentials = json.load(creds)
 
-def screenshot_page()
+def screenshot_page():
+    pass
 
 def telegram_bot_sendtext(bot_message, v1=True):
     bot_token = credentials["bot-token"]
