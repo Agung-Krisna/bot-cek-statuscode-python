@@ -8,7 +8,7 @@ from pathlib import Path
 
 app = FastAPI()
 
-
+file_not_found ="null"
 
 filename = ""
 @app.get('/screenshot/{domain}')
@@ -35,5 +35,6 @@ async def getfile(filename: str, response_class=FileResponse):
         
     else:
         print(f'The file {path_to_file} does not exist')
+        return {"filename": file_not_found}
         
 
