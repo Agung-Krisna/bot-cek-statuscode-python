@@ -22,8 +22,10 @@ credentials = json.load(creds)
 
 def screenshot_page(copy_domain):
     #192.168.1.1 example ip
-    requests.get(f"http://192.168.1.1:8080/screenshot/{copy_domain}")
-    print(x.text)
+    x = requests.get(f"http://192.168.1.1:8080/screenshot/{copy_domain}")
+    string = (x.text)
+    print(string[13:50])
+    #print(x.text)
     pass
 
 def telegram_bot_sendtext(bot_message, v1=True):
