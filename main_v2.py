@@ -21,6 +21,7 @@ creds = open('creds.json')
 credentials = json.load(creds)
 
 def screenshot_page(copy_domain):
+    global string
     #192.168.1.1 example ip
     x = requests.get(f"http://192.168.1.1:8080/screenshot/{copy_domain}")
     string = (x.text)
