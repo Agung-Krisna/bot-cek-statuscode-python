@@ -86,7 +86,7 @@ def sanitize_input(domain):
 
 domains = open("/home//pengembangan_folder/domain.txt", 'r').readlines()
 
-def iterateDomains(domains, sleep_time=5, timeout=180):
+def iterateDomains(domains, sleep_time=2, timeout=180):
     for domain in domains:
         copy_domain = domain
         domain = sanitize_input(domain)
